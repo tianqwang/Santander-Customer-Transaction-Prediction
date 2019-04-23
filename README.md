@@ -9,6 +9,7 @@
 
 ## Key points in this competition:
  - **Real & Sythetic Data**: Quite big part of the data are sythetic, for both training data and test data. I guess the competition host did this way to avoid data leakage and leaderboard probing. But they used different ways to generate synthetic data:
+ 
     - Test data: Half of the instances are synthetic, whose variables are sampled from those real data.
     - Training data: Each instance are real, but for each instance about half of the features are added noise.
  
@@ -19,6 +20,7 @@
 
 ## How to find noises by EDA
  - Firstly I checked the unique value numbers for each variable, in different subgroups, and noticed there is a significant difference for the number of unique values between training data and test data, given they have the same size (200k):
+ 
   - Training Data
   - Test Data
   - Training Data with label=0
@@ -27,6 +29,7 @@
 ![unique](img/unique_values.png)
 
  - Then based on this observation, I further check the distribution of each variable, for each subgroup:
+ 
   - Test data
   - Training data
   - Training data that variable values appear in test data
@@ -40,6 +43,7 @@
 - **Deliver information to the model about noises**: Since we already know the existence of noise in training data, the first strategy is to deliver this information to the model. I added another 200 features to mark if the instance-variable level point are noised or not, if they are seemed to be noise, I mark those points to be `nan`, and if they are not noise, I retain the raw values.
 
 - **Use different ways to Denoise data**: Since there is noise in training data, but not in the test data, which makes the distributions between training data and test data are quite different. Finding a way to denoise the training data is the key to improve the model performance and make the result consistent in test data. Here are some strategies I tried to denoise the data:
+
  1. **Round the raw data:** The model would learn the rank relations within each variable for each instance, the noise would possibly reorder the original relation. By roughly round the raw data, data ordinal relations would be more robust to tiny noises. Another benefit for the round operation is it could automatically fit the scale of different features. 
  
  2. **Clustering:** Roughly round could have some problems to optimize data clustering, since it is only based on the specific digit points. A better way to cluster the data is clustering data based on a more reasonalbly way. So I also used some clustering algorithms to smarterly cluster the data. i.e., clustering based on distrance: K-means; clustering based on distribution density: DbScan
@@ -52,7 +56,7 @@ The model I used in this competition is quite simple, which is a LightGBM model,
 There are totally 602 features are included for modeling:
 
 -  The original 200 features.
--  200 features with mark noise data as `nan`
+-  200 features with mark noise data as `nan`.
 -  200 feature mark if the feature are in the 2.5-97.5 percentile of the whole dataset, within that feature.
 -  2 statistics features got across different features, after standardizing all features.
 

@@ -1,6 +1,6 @@
 # Santander-Customer-Transaction-Prediction
 
-**68th Solution** of Santander-Customer-Transaction-Prediction in Kaggle.
+**68th Place Solution** of Santander-Customer-Transaction-Prediction in Kaggle.
 
 
 
